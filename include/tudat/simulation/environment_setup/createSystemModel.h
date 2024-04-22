@@ -163,33 +163,33 @@ inline std::shared_ptr< BodyPanelGeometrySettings > bodyTrackingPanelGeometry(
 
 
 
-inline std::shared_ptr< BodyPanelGeometrySettings > frameFixedPanelGeometry(
-    const Eigen::Vector3d& surfaceNormal,
-    const double area,
-    const std::string& frameOrientation = "" )
-{
-    return std::make_shared< FrameFixedBodyPanelGeometrySettings >(
-        surfaceNormal, area, frameOrientation );
-}
+// inline std::shared_ptr< BodyPanelGeometrySettings > frameFixedPanelGeometry(
+//     const Eigen::Vector3d& surfaceNormal,
+//     const double area,
+//     const std::string& frameOrientation = "" )
+// {
+//     return std::make_shared< FrameFixedBodyPanelGeometrySettings >(
+//         surfaceNormal, area, frameOrientation );
+// }
 
-inline std::shared_ptr< BodyPanelGeometrySettings > timeVaryingPanelGeometry(
-    const std::function< Eigen::Vector3d( ) >& surfaceNormalFunction,
-    const double area,
-    const std::string& frameOrientation = "" )
-{
-    return std::make_shared< FrameVariableBodyPanelGeometrySettings >(
-        surfaceNormalFunction, area, frameOrientation );
-}
+// inline std::shared_ptr< BodyPanelGeometrySettings > timeVaryingPanelGeometry(
+//     const std::function< Eigen::Vector3d( ) >& surfaceNormalFunction,
+//     const double area,
+//     const std::string& frameOrientation = "" )
+// {
+//     return std::make_shared< FrameVariableBodyPanelGeometrySettings >(
+//         surfaceNormalFunction, area, frameOrientation );
+// }
 
-inline std::shared_ptr< BodyPanelGeometrySettings > bodyTrackingPanelGeometry(
-    const std::string& bodyToTrack,
-    const bool towardsTrackedBody,
-    const double area,
-    const std::string& frameOrientation = "" )
-{
-    return std::make_shared< FrameVariableBodyPanelGeometrySettings >(
-        bodyToTrack, towardsTrackedBody, area, frameOrientation );
-}
+// inline std::shared_ptr< BodyPanelGeometrySettings > bodyTrackingPanelGeometry(
+//     const std::string& bodyToTrack,
+//     const bool towardsTrackedBody,
+//     const double area,
+//     const std::string& frameOrientation = "" )
+// {
+//     return std::make_shared< FrameVariableBodyPanelGeometrySettings >(
+//         bodyToTrack, towardsTrackedBody, area, frameOrientation );
+// }
 
 
 class BodyPanelSettings
