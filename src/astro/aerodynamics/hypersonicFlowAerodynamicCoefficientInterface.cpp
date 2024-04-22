@@ -24,8 +24,8 @@
 #include "tudat/astro/aerodynamics/aerodynamicCoefficientInterface.h"
 #include "tudat/basics/basicTypedefs.h"
 #include "tudat/astro/system_models/vehicleExteriorPanels.h"
-#include "tudat/astro/aerodynamics/rarefiedFlowInteractionModel.h"
-#include "tudat/astro/aerodynamics/rarefiedFlowAerodynamicCoefficientInterface.h"
+#include "tudat/astro/aerodynamics/hypersonicFlowInteractionModel.h"
+#include "tudat/astro/aerodynamics/hypersonicFlowAerodynamicCoefficientInterface.h"
 
 namespace tudat
 {
@@ -61,7 +61,7 @@ namespace aerodynamics
 *  determination implemented by derived class
 *  \param currentTime Time to which coefficients are to be updated
 */
-void RarefiedFlowAerodynamicCoefficientInterface::updateCurrentCoefficients(
+void HypersonicFlowAerodynamicCoefficientInterface::updateCurrentCoefficients(
     const std::vector< double >& independentVariables,
     const double currentTime = TUDAT_NAN )
 {
