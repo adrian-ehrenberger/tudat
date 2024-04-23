@@ -117,6 +117,11 @@ public:
         return rarefiedFlowInteractionModel_;
     }
 
+    std::shared_ptr< aerodynamics::HypersonicFlowInteractionModel > getHypersonicFlowInteractionModel( ) const
+    {
+        return HypersonicFlowInteractionModel_;
+    }
+
     std::function< Eigen::Vector3d( ) > getFrameFixedSurfaceNormal( ) const
     {
         return frameFixedSurfaceNormal_;
@@ -157,6 +162,8 @@ protected:
     std::shared_ptr< electromagnetism::ReflectionLaw > reflectionLaw_;
 
     std::shared_ptr< aerodynamics::RarefiedFlowInteractionModel > rarefiedFlowInteractionModel_;
+
+    std::shared_ptr< aerodynamics::HypersonicFlowInteractionModel > hypersonicFlowInteractionModel_;
 
 };
 

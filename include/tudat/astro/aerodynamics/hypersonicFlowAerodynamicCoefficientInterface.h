@@ -61,17 +61,7 @@ public:
         const Eigen::Vector3d& momentReferencePoint,
         const std::vector< AerodynamicCoefficientsIndependentVariables > independentVariableNames = {
             angle_of_attack_dependent,
-            angle_of_sideslip_dependent,
-            temperature_dependent,
-            velocity_dependent,
-            he_number_density_dependent,
-            o_number_density_dependent,
-            n2_number_density_dependent,
-            o2_number_density_dependent,
-            ar_number_density_dependent,
-            h_number_density_dependent,
-            n_number_density_dependent,
-            anomalous_o_number_density_dependent},
+            angle_of_sideslip_dependent},
         const AerodynamicCoefficientFrames forceCoefficientsFrame = negative_aerodynamic_frame_coefficients,
         const AerodynamicCoefficientFrames momentCoefficientsFrame = body_fixed_frame_coefficients,
         const bool accountForShadedPanels = false
@@ -138,12 +128,13 @@ private:
     //! Vehicle part orientation
     // std::map< std::string, std::shared_ptr< tudat::ephemerides::RotationalEphemeris > > vehiclePartOrientations_;
 
+    
     //! Vehicle panel cosines of lift and drag angles
     std::map< std::string, std::vector< std::pair< double, double > > > vehiclePanelCosinesOfLiftAndDragAngles_;
 
     //! Vehicle panel lift unit vecotrs
     std::map< std::string, std::vector< Eigen::Vector3d > > vehiclePanelLiftUnitVectors_;
-
+    
     //! drag unit vector
     Eigen::Vector3d dragUnitVector_;
 

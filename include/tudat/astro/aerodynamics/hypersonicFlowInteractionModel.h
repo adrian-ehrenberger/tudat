@@ -29,6 +29,28 @@ public:
         // TBD
     );
 
+    Eigen::Vector3d computePanelForceCoefficientVector( 
+        double CosineOfNormalDragAngle, //gammai in Doornbos
+        double CosineOfNormalLiftAngle, //li in Doornbos
+        double panelSurfaceArea,
+        double panelTemperature,
+        Eigen::Vector3d liftUnitVector,
+        Eigen::Vector3d dragUnitVecotr,
+        double Vinf,
+        double T_atm,
+        std::vector<double> number_densities,
+        double total_number_density,
+        double Aref
+        );
+
+    Eigen::Vector3d computePanelMomentCoefficientVector( 
+        Eigen::Vector3d panelForceCoefficientVector,
+        Eigen::Vector3d panelPositionVector,
+        double lref
+        );
+
+    double panelPressureCoefficient_;
+
 
 };
 } // tudat
