@@ -13,6 +13,7 @@
 #define TUDAT_HYPERSONIC_FLOW_INTERACTION_MODEL_H
 
 #include <Eigen/Core>
+#include "tudat/astro/aerodynamics/aerodynamics.h"
 
 namespace tudat
 {
@@ -21,36 +22,28 @@ namespace aerodynamics
 
 class HypersonicFlowInteractionModel{
 public:
-    HypersonicFlowInteractionModel() = default;
+    HypersonicFlowInteractionModel(){ }
 
-    virtual ~HypersonicFlowInteractionModel() = default;
+    virtual ~HypersonicFlowInteractionModel( ){ }
 
     double computePanelPressureCoefficient(
-        // TBD
+        double inclinationAngle
     );
 
     Eigen::Vector3d computePanelForceCoefficientVector( 
-        double CosineOfNormalDragAngle, //gammai in Doornbos
-        double CosineOfNormalLiftAngle, //li in Doornbos
-        double panelSurfaceArea,
-        double panelTemperature,
+        double panelArea,
+        double referenceArea,
+        double panelCosineLiftAngle,
+        double panelCosineDragAngle,
         Eigen::Vector3d liftUnitVector,
-        Eigen::Vector3d dragUnitVecotr,
-        double Vinf,
-        double T_atm,
-        std::vector<double> number_densities,
-        double total_number_density,
-        double Aref
+        Eigen::Vector3d dragUnitVetor
         );
 
     Eigen::Vector3d computePanelMomentCoefficientVector( 
         Eigen::Vector3d panelForceCoefficientVector,
         Eigen::Vector3d panelPositionVector,
-        double lref
+        double referenceLength
         );
-
-    double panelPressureCoefficient_;
-
 
 };
 } // tudat

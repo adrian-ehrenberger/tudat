@@ -25,6 +25,7 @@
 #include "tudat/basics/basicTypedefs.h"
 #include "tudat/astro/system_models/vehicleExteriorPanels.h"
 #include "tudat/astro/aerodynamics/hypersonicFlowInteractionModel.h"
+#include "tudat/astro/system_models/vehicleSystems.h"
 #include "tudat/astro/aerodynamics/hypersonicFlowAerodynamicCoefficientInterface.h"
 
 namespace tudat
@@ -33,26 +34,27 @@ namespace aerodynamics
 {
 
 
-HypersonicFlowAerodynamicCoefficientInterface::HypersonicFlowAerodynamicCoefficientInterface(
-    const std::map< std::string, std::vector< std::shared_ptr< tudat::system_models::VehicleExteriorPanel > > > vehicleExteriorPanels,
-    const std::map< std::string, std::shared_ptr< tudat::ephemerides::RotationalEphemeris > > vehiclePartOrientation,
-    const double referenceLength,
-    const double referenceArea,
-    const Eigen::Vector3d& momentReferencePoint,
-    const std::vector< AerodynamicCoefficientsIndependentVariables > independentVariableNames,
-    const AerodynamicCoefficientFrames forceCoefficientsFrame = negative_aerodynamic_frame_coefficients,
-    const AerodynamicCoefficientFrames momentCoefficientsFrame = body_fixed_frame_coefficients,
-    const bool pregenerateCoefficients = false
-    ){
+// HypersonicFlowAerodynamicCoefficientInterface::HypersonicFlowAerodynamicCoefficientInterface(
+//     tudat::system_models::VehicleSystems vehicle,
+//     const double referenceLength,
+//     const double referenceArea,
+//     const Eigen::Vector3d& momentReferencePoint,
+//     const std::vector< AerodynamicCoefficientsIndependentVariables > independentVariableNames = {
+//         angle_of_attack_dependent,
+//         angle_of_sideslip_dependent},
+//     const AerodynamicCoefficientFrames forceCoefficientsFrame = negative_aerodynamic_frame_coefficients,
+//     const AerodynamicCoefficientFrames momentCoefficientsFrame = body_fixed_frame_coefficients,
+//     const bool accountForShadedPanels = false
+//     ){
 
-        // pregenerate coefficients for vehicle if requested
+//         // pregenerate coefficients for vehicle if requested
 
-        if ( pregenerateCoefficients )
-        {
-            createCoefficientsMap( );
-        }
+//         if ( pregenerateCoefficients )
+//         {
+//             createCoefficientsMap( );
+//         }
 
-    }
+//     }
 
 
 //! Compute the aerodynamic coefficients of the body itself (without control surfaces) at current flight condition.
@@ -74,14 +76,7 @@ void HypersonicFlowAerodynamicCoefficientInterface::updateCurrentCoefficients(
     // Determine inclinations
     determineIncinations( currentTime, independentVariables.at(0), independentVariables.at(1) );
 
-    std::vector< double > numberDensities;
-
-    for ( int i = 4; i < independentVariables.size(); i++ )
-    {
-        numberDensities.push_back( independentVariables.at(i) );
-    }
-
-    determinePanelForceCoefficientVectors( independentVariables.at(2), independentVariables.at(3), numberDensities );
+    determinePanelForceCoefficientVectors( );
 
     determinePanelMomentCoefficientVectors( currentTime );
 
@@ -195,20 +190,20 @@ void HypersonicFlowAerodynamicCoefficientInterface::determineIncinations(
 }
 
 void HypersonicFlowAerodynamicCoefficientInterface::determinePanelForceCoefficientVectors(
-
 ){
 
 
     // Loop over all vehicle part names in vehicleExteriorPanels_
     for (auto& vehiclePartEntry : vehicleExteriorPanels_) {
-        std::string& vehiclePartName = vehiclePartEntry.first;
-        std::vector<std::shared_ptr<tudat::system_models::VehicleExteriorPanel>>& exteriorPanels = vehiclePartEntry.second;
+        std::string vehiclePartName = vehiclePartEntry.first;
+        std::vector<std::shared_ptr<tudat::system_models::VehicleExteriorPanel>> exteriorPanels = vehiclePartEntry.second;
 
         // Loop over all vehicle panels in vehicleExteriorPanels_ for this vehicle part
         for ( int i = 0; i < vehicleExteriorPanels_.at( vehiclePartName ).size(); i++ )
         {
             std::shared_ptr< tudat::system_models::VehicleExteriorPanel > vehiclePanel = vehicleExteriorPanels_.at( vehiclePartName ).at( i );
-            
+
+
             vehiclePanelForceCoefficientVectors_[ vehiclePartName ].push_back(
                 vehiclePanel->getHypersonicFlowInteractionModel()->computePanelForceCoefficientVector( 
                     vehiclePanel->getPanelArea(),                    
@@ -216,9 +211,9 @@ void HypersonicFlowAerodynamicCoefficientInterface::determinePanelForceCoefficie
                     vehiclePanelCosinesOfLiftAndDragAngles_[ vehiclePartName ].at( i ).second,
                     vehiclePanelCosinesOfLiftAndDragAngles_[ vehiclePartName ].at( i ).first,                    
                     vehiclePanelLiftUnitVectors_[ vehiclePartName ].at( i ),
-                    dragUnitVector_,
+                    dragUnitVector_
                 )
-            );
+            );            
         }
     }
 }   
@@ -229,8 +224,8 @@ void HypersonicFlowAerodynamicCoefficientInterface::determinePanelMomentCoeffici
 
     // Loop over all vehicle part names in vehicleExteriorPanels_
     for (auto& vehiclePartEntry : vehicleExteriorPanels_) {
-        std::string& vehiclePartName = vehiclePartEntry.first;
-        std::vector<std::shared_ptr<tudat::system_models::VehicleExteriorPanel>>& exteriorPanels = vehiclePartEntry.second;
+        std::string vehiclePartName = vehiclePartEntry.first;
+        std::vector<std::shared_ptr<tudat::system_models::VehicleExteriorPanel>> exteriorPanels = vehiclePartEntry.second;
 
         // Loop over all vehicle panels in vehicleExteriorPanels_ for this vehicle part
         for ( int i = 0; i < vehicleExteriorPanels_.at( vehiclePartName ).size(); i++ )

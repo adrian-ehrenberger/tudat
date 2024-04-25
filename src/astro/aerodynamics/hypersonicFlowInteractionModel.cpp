@@ -11,7 +11,7 @@
 #include "tudat/astro/aerodynamics/hypersonicFlowInteractionModel.h"
 
 #include <Eigen/Core>
-
+#include <iostream>
 #include "tudat/math/basic/linearAlgebra.h"
 #include "tudat/math/basic/mathematicalConstants.h"
 
@@ -23,7 +23,7 @@ namespace aerodynamics
 // RarefiedFlowInteractionModel::RarefiedFlowInteractionModel() = default;
 
 /*! Computes aerodynamic force coefficients for a single panel
-*  \param cosineOfNormalDragAngle Cosine of the angle between the freestream velocity and the panel normal
+*  \param inclinationAngle Cosine of the angle between the freestream velocity and the panel normal
 *  \param cosineOfNormalLiftAngle Cosine of the angle between the freestream velocity and the panel normal
 *  \param panelSurfaceArea Area of the panel
 *  \param panelTemperature Temperature of the panel
@@ -41,16 +41,22 @@ double HypersonicFlowInteractionModel::computePanelPressureCoefficient(
     )
 {
 
+    double panelPressureCoefficient = 0.0;
 
     // if your're reading this, I apologize for the shit code. Just trying to get it to work atm....
-    if (inclinationAngle <= -3.14159265359 || inclinationAngle >= 3.14159265359)
+    if (inclinationAngle <= -3.14159265359/2 || inclinationAngle >= 3.14159265359/2)
     {
-        panelPressureCoefficient_ = 0.0;
+        panelPressureCoefficient = 0.0;
 
     }else{
 
-        panelPressureCoefficient_ = computeNewtonianPressureCoefficient( inclinationAngle );
+        // double panelPressureCoefficient_ = computeNewtonianPressureCoefficient( inclinationAngle );
+
+        // for testing purposes        
+        panelPressureCoefficient = 2.0 * pow( cos( inclinationAngle ), 2.0 );
     }
+
+    return panelPressureCoefficient;
 }
 
 
@@ -64,17 +70,19 @@ Eigen::Vector3d HypersonicFlowInteractionModel::computePanelForceCoefficientVect
     )
 {
     
-    double inclinationAngle = std::acos( panelCosineDragAngle );
 
-    computePanelPressureCoefficient( inclinationAngle );
+    double inclinationAngle = acos( panelCosineDragAngle );
 
-    Eigen::Vector3d panelForceCoefficientVector = panelPressureCoefficient_ * panelCosineLiftAngle * liftUnitVector + \
-                                                  panelPressureCoefficient_ * panelCosineDragAngle * dragUnitVetor;
+
+    double panelPressureCoefficient = computePanelPressureCoefficient( inclinationAngle );
+
+
+    Eigen::Vector3d panelForceCoefficientVector = panelPressureCoefficient * panelCosineLiftAngle * liftUnitVector + panelPressureCoefficient * panelCosineDragAngle * dragUnitVetor;
 
     // Normalize result by reference area.
     panelForceCoefficientVector = panelForceCoefficientVector * panelArea / referenceArea;
 
-    return panelForceCoefficientVector
+    return panelForceCoefficientVector;
 
 }
 
@@ -86,8 +94,6 @@ Eigen::Vector3d HypersonicFlowInteractionModel::computePanelMomentCoefficientVec
     return panelPositionVector.cross(panelForceCoefficientVector) / referenceLength;
 }
 
-
-// private:
 
 
 } // tudat

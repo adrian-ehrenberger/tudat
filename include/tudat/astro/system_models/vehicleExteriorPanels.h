@@ -18,6 +18,7 @@
 
 #include "tudat/astro/electromagnetism/reflectionLaw.h"
 #include "tudat/astro/aerodynamics/rarefiedFlowInteractionModel.h"
+#include "tudat/astro/aerodynamics/hypersonicFlowInteractionModel.h"
 #include "tudat/astro/ephemerides/rotationalEphemeris.h"
 #include "tudat/astro/system_models/engineModel.h"
 
@@ -31,19 +32,6 @@ namespace system_models
 class VehicleExteriorPanel
 {
 public:
-
-    VehicleExteriorPanel(
-        const Eigen::Vector3d& frameFixedSurfaceNormal,
-        const Eigen::Vector3d& frameFixedPositionVector,
-        const double panelArea,
-        const double panelTemperature = 273.0,
-        const std::shared_ptr< electromagnetism::ReflectionLaw > reflectionLaw = nullptr ):
-        frameFixedSurfaceNormal_( [=]( ){ return frameFixedSurfaceNormal; } ),
-        frameFixedPositionVector_( [=]( ){ return frameFixedPositionVector; } ),
-        panelArea_( panelArea ),
-        panelTemperature_( panelTemperature ),
-        trackedBody_( "" ),
-        reflectionLaw_( reflectionLaw ){ }
 
     VehicleExteriorPanel(
         const Eigen::Vector3d& frameFixedSurfaceNormal,
@@ -119,7 +107,7 @@ public:
 
     std::shared_ptr< aerodynamics::HypersonicFlowInteractionModel > getHypersonicFlowInteractionModel( ) const
     {
-        return HypersonicFlowInteractionModel_;
+        return hypersonicFlowInteractionModel_;
     }
 
     std::function< Eigen::Vector3d( ) > getFrameFixedSurfaceNormal( ) const

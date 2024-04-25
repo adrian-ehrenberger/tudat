@@ -43,8 +43,7 @@ class HypersonicFlowAerodynamicCoefficientInterface: public AerodynamicCoefficie
 public:
     /*!
      * Constructor of rarefied flow aerodynamic coefficient interface.
-     * \param vehicleExteriorPanels Vehicle panels
-     * \param vehiclePartOrientation Vehicle part orientation
+     * \param vehicle Vehicle 
      * \param referenceLength Reference length
      * \param referenceArea Reference area
      * \param momentReferencePoint Moment reference point
@@ -89,7 +88,7 @@ public:
     /*!
      * Default destructor.
      */
-    ~RarefiedFlowAerodynamicCoefficientInterface( ) = default;
+    ~HypersonicFlowAerodynamicCoefficientInterface( ) = default;
 
 
 
@@ -111,9 +110,7 @@ private:
     
 
 
-    void determinePanelForceCoefficientVectors(
-        double freestreamVelocity, double atmosphericTemperature, std::vector< double > numberDensities
-    );
+    void determinePanelForceCoefficientVectors( );
 
 
 
