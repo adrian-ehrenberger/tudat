@@ -469,26 +469,7 @@ public:
             momentReferencePoint,
             independentVariableNames,
             forceCoefficientsFrame, momentCoefficientsFrame,
-            addForceContributionToMoments ),
-        forceCoefficientFunction_( forceCoefficientFunction ),
-        momentCoefficientFunction_( momentCoefficientFunction )
-    { }
-
-    std::function< Eigen::Vector3d( const std::vector< double >& ) > getForceCoefficientFunction( )
-    {
-        return forceCoefficientFunction_;
-    }
-
-    std::function< Eigen::Vector3d( const std::vector< double >& ) > getMomentCoefficientFunction( )
-    {
-        return momentCoefficientFunction_;
-    }
-
-
-private:
-    std::function< Eigen::Vector3d( const std::vector< double >& ) > forceCoefficientFunction_;
-
-    std::function< Eigen::Vector3d( const std::vector< double >& ) > momentCoefficientFunction_;
+            addForceContributionToMoments )
 
 };
 
@@ -514,24 +495,7 @@ public:
             momentReferencePoint,
             independentVariableNames,
             forceCoefficientsFrame, momentCoefficientsFrame,
-            addForceContributionToMoments ),
-    { }
-
-    std::function< Eigen::Vector3d( const std::vector< double >& ) > getForceCoefficientFunction( )
-    {
-        return forceCoefficientFunction_;
-    }
-
-    std::function< Eigen::Vector3d( const std::vector< double >& ) > getMomentCoefficientFunction( )
-    {
-        return momentCoefficientFunction_;
-    }
-
-
-private:
-    std::function< Eigen::Vector3d( const std::vector< double >& ) > forceCoefficientFunction_;
-
-    std::function< Eigen::Vector3d( const std::vector< double >& ) > momentCoefficientFunction_;
+            addForceContributionToMoments )
 
 };
 
@@ -543,37 +507,52 @@ public:
     BridgedModelsAerodynamicCoefficientSettings(
             const std::shared_ptr< AerodynamicCoefficientSettings > ModelSettings1,
             const std::shared_ptr< AerodynamicCoefficientSettings > ModelSettings2,
-            const double referenceLength,
-            const double referenceArea,
-            const Eigen::Vector3d& momentReferencePoint,
-            const aerodynamics::AerodynamicCoefficientFrames forceCoefficientsFrame = aerodynamics::negative_aerodynamic_frame_coefficients,
-            const aerodynamics::AerodynamicCoefficientFrames momentCoefficientsFrame = aerodynamics::body_fixed_frame_coefficients,
-            const bool addForceContributionToMoments = false ) :
+            const std::function< const double > bridgingFunction,
+            const std::pair< double, double > bridgingFunctionLimits,
+            const aerodynamics::AerodynamicCoefficientsIndependentVariables bridgingVariable = aerodynamics::knudsen_number_dependent) :
         AerodynamicCoefficientSettings(
-            bridged_models_aerodynamic_coefficients, referenceLength, referenceArea,
-            momentReferencePoint,
-            independentVariableNames,
-            forceCoefficientsFrame, momentCoefficientsFrame,
-            addForceContributionToMoments ),
-        forceCoefficientFunction_( forceCoefficientFunction ),
-        momentCoefficientFunction_( momentCoefficientFunction )
+            bridged_models_aerodynamic_coefficients, 
+            ModelSettings1->getReferenceLength( ), ModelSettings1->getReferenceArea( ),
+            ModelSettings1->getMomentReferencePoint( ),
+            ModelSettings1->getIndependentVariableNames( ),
+            ModelSettings1->getForceCoefficientsFrame( ), ModelSettings1->getMomentCoefficientsFrame( ),
+            ModelSettings1->getAddForceContributionToMoments( )),
+        modelSettings1_( ModelSettings1 ),
+        modelSettings2_( ModelSettings2 ),
+        bridgingFunction_( bridgingFunction ),
+        bridgingFunctionLimits_( bridgingFunctionLimits ),
+        bridgingVariable_( bridgingVariable )
     { }
 
-    std::function< Eigen::Vector3d( const std::vector< double >& ) > getForceCoefficientFunction( )
+    std::shared_ptr< AerodynamicCoefficientSettings > getModelSettings1( )
     {
-        return forceCoefficientFunction_;
+        return modelSettings1_;
     }
 
-    std::function< Eigen::Vector3d( const std::vector< double >& ) > getMomentCoefficientFunction( )
+    std::shared_ptr< AerodynamicCoefficientSettings > getMomentModelSettings2( )
     {
-        return momentCoefficientFunction_;
+        return modelSettings2_;
+    }
+
+    std::function< const double > getBridgingFunction( )
+    {
+        return bridgingFunction_;
+    }
+
+    std::pair< double, double > getBridgingFunctionLimits( )
+    {
+        return bridgingFunctionLimits_;
+    }
+
+    aerodynamics::AerodynamicCoefficientsIndependentVariables getBridgingVariable( )
+    {
+        return bridgingVariable_;
     }
 
 
 private:
-    std::function< Eigen::Vector3d( const std::vector< double >& ) > forceCoefficientFunction_;
-
-    std::function< Eigen::Vector3d( const std::vector< double >& ) > momentCoefficientFunction_;
+    std::shared_ptr< AerodynamicCoefficientSettings > modelSettings1_;
+    std::shared_ptr< AerodynamicCoefficientSettings > modelSettings2_;
 
 };
 
