@@ -449,6 +449,32 @@ createAerodynamicCoefficientInterface(
         }
         break;
     }
+    
+    case rarefied_flow_aerodynamic_coefficients:
+
+        coefficientInterface = std::make_shared< RarefiedFlowAerodynamicCoefficientInterface >(
+                    bodies.at( body )->getVehicleSystems( ), coefficientSettings->getReferenceLength( ),
+                    coefficientSettings->getReferenceArea( ),
+                    coefficientSettings->getMomentReferencePoint( ),
+                    coefficientSettings->getIndependentVariableNames( ),
+                    coefficientSettings->getForceCoefficientsFrame( ),
+                    coefficientSettings->getMomentCoefficientsFrame( ));
+
+    case hypersonic_flow_aerodynamic_coefficients:
+
+        coefficientInterface = std::make_shared< HypersonicFlowAerodynamicCoefficientInterface >(
+                    bodies.at( body )->getVehicleSystems( ), coefficientSettings->getReferenceLength( ),
+                    coefficientSettings->getReferenceArea( ),
+                    coefficientSettings->getMomentReferencePoint( ),
+                    coefficientSettings->getIndependentVariableNames( ),
+                    coefficientSettings->getForceCoefficientsFrame( ),
+                    coefficientSettings->getMomentCoefficientsFrame( ) );
+
+    case bridged_models_aerodynamic_coefficients:
+
+        throw std::runtime_error( "Error, bridged aerodynamic coefficient models not yet implemented" );
+
+    
     default:
         throw std::runtime_error( "Error, do not recognize aerodynamic coefficient settings for " + body );
     }

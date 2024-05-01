@@ -439,6 +439,145 @@ private:
 
 };
 
+class RarefiedFlowAerodynamicCoefficientSettings: public AerodynamicCoefficientSettings
+{
+public:
+
+    RarefiedFlowAerodynamicCoefficientSettings(
+            const double referenceLength,
+            const double referenceArea,
+            const Eigen::Vector3d& momentReferencePoint,
+            const std::vector< aerodynamics::AerodynamicCoefficientsIndependentVariables >
+            independentVariableNames = {
+                angle_of_attack_dependent,
+                angle_of_sideslip_dependent,
+                temperature_dependent,
+                velocity_dependent,
+                he_number_density_dependent,
+                o_number_density_dependent,
+                n2_number_density_dependent,
+                o2_number_density_dependent,
+                ar_number_density_dependent,
+                h_number_density_dependent,
+                n_number_density_dependent,
+                anomalous_o_number_density_dependent},
+            const aerodynamics::AerodynamicCoefficientFrames forceCoefficientsFrame = aerodynamics::negative_aerodynamic_frame_coefficients,
+            const aerodynamics::AerodynamicCoefficientFrames momentCoefficientsFrame = aerodynamics::body_fixed_frame_coefficients,
+            const bool addForceContributionToMoments = false ) :
+        AerodynamicCoefficientSettings(
+            rarefied_flow_aerodynamic_coefficients, referenceLength, referenceArea,
+            momentReferencePoint,
+            independentVariableNames,
+            forceCoefficientsFrame, momentCoefficientsFrame,
+            addForceContributionToMoments ),
+        forceCoefficientFunction_( forceCoefficientFunction ),
+        momentCoefficientFunction_( momentCoefficientFunction )
+    { }
+
+    std::function< Eigen::Vector3d( const std::vector< double >& ) > getForceCoefficientFunction( )
+    {
+        return forceCoefficientFunction_;
+    }
+
+    std::function< Eigen::Vector3d( const std::vector< double >& ) > getMomentCoefficientFunction( )
+    {
+        return momentCoefficientFunction_;
+    }
+
+
+private:
+    std::function< Eigen::Vector3d( const std::vector< double >& ) > forceCoefficientFunction_;
+
+    std::function< Eigen::Vector3d( const std::vector< double >& ) > momentCoefficientFunction_;
+
+};
+
+
+class HypersonicFlowAerodynamicCoefficientSettings: public AerodynamicCoefficientSettings
+{
+public:
+
+    HypersonicFlowAerodynamicCoefficientSettings(
+            const double referenceLength,
+            const double referenceArea,
+            const Eigen::Vector3d& momentReferencePoint,
+            const std::vector< aerodynamics::AerodynamicCoefficientsIndependentVariables >
+            independentVariableNames = {
+                aerodynamics::angle_of_attack_dependent,
+                aerodynamics::angle_of_sideslip_dependent,
+                aerodynamics::mach_number_dependent},
+            const aerodynamics::AerodynamicCoefficientFrames forceCoefficientsFrame = aerodynamics::negative_aerodynamic_frame_coefficients,
+            const aerodynamics::AerodynamicCoefficientFrames momentCoefficientsFrame = aerodynamics::body_fixed_frame_coefficients,
+            const bool addForceContributionToMoments = false ) :
+        AerodynamicCoefficientSettings(
+            hypersonic_flow_aerodynamic_coefficients, referenceLength, referenceArea,
+            momentReferencePoint,
+            independentVariableNames,
+            forceCoefficientsFrame, momentCoefficientsFrame,
+            addForceContributionToMoments ),
+    { }
+
+    std::function< Eigen::Vector3d( const std::vector< double >& ) > getForceCoefficientFunction( )
+    {
+        return forceCoefficientFunction_;
+    }
+
+    std::function< Eigen::Vector3d( const std::vector< double >& ) > getMomentCoefficientFunction( )
+    {
+        return momentCoefficientFunction_;
+    }
+
+
+private:
+    std::function< Eigen::Vector3d( const std::vector< double >& ) > forceCoefficientFunction_;
+
+    std::function< Eigen::Vector3d( const std::vector< double >& ) > momentCoefficientFunction_;
+
+};
+
+
+class BridgedModelsAerodynamicCoefficientSettings: public AerodynamicCoefficientSettings
+{
+public:
+
+    BridgedModelsAerodynamicCoefficientSettings(
+            const std::shared_ptr< AerodynamicCoefficientSettings > ModelSettings1,
+            const std::shared_ptr< AerodynamicCoefficientSettings > ModelSettings2,
+            const double referenceLength,
+            const double referenceArea,
+            const Eigen::Vector3d& momentReferencePoint,
+            const aerodynamics::AerodynamicCoefficientFrames forceCoefficientsFrame = aerodynamics::negative_aerodynamic_frame_coefficients,
+            const aerodynamics::AerodynamicCoefficientFrames momentCoefficientsFrame = aerodynamics::body_fixed_frame_coefficients,
+            const bool addForceContributionToMoments = false ) :
+        AerodynamicCoefficientSettings(
+            bridged_models_aerodynamic_coefficients, referenceLength, referenceArea,
+            momentReferencePoint,
+            independentVariableNames,
+            forceCoefficientsFrame, momentCoefficientsFrame,
+            addForceContributionToMoments ),
+        forceCoefficientFunction_( forceCoefficientFunction ),
+        momentCoefficientFunction_( momentCoefficientFunction )
+    { }
+
+    std::function< Eigen::Vector3d( const std::vector< double >& ) > getForceCoefficientFunction( )
+    {
+        return forceCoefficientFunction_;
+    }
+
+    std::function< Eigen::Vector3d( const std::vector< double >& ) > getMomentCoefficientFunction( )
+    {
+        return momentCoefficientFunction_;
+    }
+
+
+private:
+    std::function< Eigen::Vector3d( const std::vector< double >& ) > forceCoefficientFunction_;
+
+    std::function< Eigen::Vector3d( const std::vector< double >& ) > momentCoefficientFunction_;
+
+};
+
+
 //! @get_docstring(constantAerodynamicCoefficientSettings)
 inline std::shared_ptr< AerodynamicCoefficientSettings > constantAerodynamicCoefficientSettingsDeprecated(
         const double referenceArea,
