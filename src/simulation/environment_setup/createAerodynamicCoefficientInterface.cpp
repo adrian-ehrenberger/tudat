@@ -290,15 +290,60 @@ createBridgedAerodynamicCoefficientInterface(
             createAerodynamicCoefficientInterface(
                 bridgedCoefficientSettings->getModelSettings2( ), body, bodies );
 
-        // Create bridged interface
-        // Create an empty coefficient interface to be used as a placeholder for the bridged interface
+        int numberOfBridgingVars = bridgedCoefficientSettings->getBridgingVariable( ).size( );
+        if ( numberOfBridgingVars != 1 )
+        {
+            throw std::runtime_error(
+                "Error, expected one bridging variable for bridged aerodynamic coefficients for body " + body );
+        }
 
-        std::shared_ptr< aerodynamics::AerodynamicCoefficientInterface > bridgedInterface =
-            std::make_shared< aerodynamics::BridgingAerodynamicCoefficientInterface >(
-                coefficientInterface_1, coefficientInterface_2,
-                bridgedCoefficientSettings->getBridgingFunction( ) );
+        int numberOfModel1Vars = coefficientInterface_1->getIndependentVariableNames( ).size( );
+        int numberOfModel2Vars = coefficientInterface_2->getIndependentVariableNames( ).size( );
+
+        // Create force coefficient function
+        std::function< Eigen::Vector3d( const std::vector< double >& ) > aerodynamicCoefficientsFunction =
+            [ = ]( const std::vector< double >& independentVariables )
+            {
+                
+                // check if we are in the first, second or bridged region 
+
+                if ( independentVariables[ 0 ] < bridgedCoefficientSettings->getBridgingFunctionLimits( ).first )
+                {
+                    return coefficientInterface_1->getCurrentAerodynamicCoefficients( independentVariables(1, numberOfModel1Vars + 1) );
+                }
+                else if ( independentVariables[ 0 ] > bridgedCoefficientSettings->getBridgingFunctionLimits( ).second )
+                {
+                    return coefficientInterface_2->getCurrentAerodynamicCoefficients( independentVariables(numberOfModel1Vars + 1, numberOfModel1Vars + numberOfModel2Vars + 1) );
+                }
+                else
+                {
+                    // bridge between the two models
+
+                    // get the bridging value
+                    double bridgingValue = bridgedCoefficientSettings->getBridgingFunction( )( independentVariables[ 0 ] );
+
+                    // get the force coefficients from both models
+                    Eigen::Vector6d aerodynamicCoefficients_1 = coefficientInterface_1->getCurrentAerodynamicCoefficients( independentVariables(1, numberOfModel1Vars + 1) );
+                    Eigen::Vector6d aerodynamicCoefficients_2 = coefficientInterface_2->getCurrentAerodynamicCoefficients( independentVariables(numberOfModel1Vars + 1, numberOfModel1Vars + numberOfModel2Vars + 1) );
+
+                    // interpolate between the two
+                    return aerodynamicCoefficients_1 * bridgingValue + aerodynamicCoefficients_2 * ( 1.0 - bridgingValue );
+
+                }
+            };
 
 
+
+        // Create aerodynamic coefficient interface.
+        return  std::make_shared< aerodynamics::CustomAerodynamicCoefficientInterface >(
+                    std::bind( &Interpolator< double, Eigen::Vector3d >::interpolate, forceInterpolator, std::placeholders::_1 ),
+                    std::bind( &Interpolator< double, Eigen::Vector3d >::interpolate, momentInterpolator, std::placeholders::_1 ),
+                    tabulatedCoefficientSettings->getReferenceLength( ),
+                    tabulatedCoefficientSettings->getReferenceArea( ),
+                    tabulatedCoefficientSettings->getMomentReferencePoint( ),
+                    tabulatedCoefficientSettings->getIndependentVariableNames( ),
+                    tabulatedCoefficientSettings->getForceCoefficientsFrame( ),
+                    tabulatedCoefficientSettings->getMomentCoefficientsFrame( ) );
     }
 
 
