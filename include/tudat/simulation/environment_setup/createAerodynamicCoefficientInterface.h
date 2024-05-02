@@ -505,8 +505,8 @@ class BridgedModelsAerodynamicCoefficientSettings: public AerodynamicCoefficient
 public:
 
     BridgedModelsAerodynamicCoefficientSettings(
-            const std::shared_ptr< AerodynamicCoefficientSettings > ModelSettings1,
-            const std::shared_ptr< AerodynamicCoefficientSettings > ModelSettings2,
+            const std::shared_ptr< AerodynamicCoefficientSettings > coefficientSettings1,
+            const std::shared_ptr< AerodynamicCoefficientSettings > coefficientSettings2,
             const std::function< const double > bridgingFunction,
             const std::pair< double, double > bridgingFunctionLimits,
             const aerodynamics::AerodynamicCoefficientsIndependentVariables bridgingVariable = aerodynamics::knudsen_number_dependent) :
@@ -517,21 +517,21 @@ public:
             ModelSettings1->getIndependentVariableNames( ),
             ModelSettings1->getForceCoefficientsFrame( ), ModelSettings1->getMomentCoefficientsFrame( ),
             ModelSettings1->getAddForceContributionToMoments( )),
-        modelSettings1_( ModelSettings1 ),
-        modelSettings2_( ModelSettings2 ),
+        coefficientSettings1_( coefficientSettings1 ),
+        coefficientSettings2_( coefficientSettings2 ),
         bridgingFunction_( bridgingFunction ),
         bridgingFunctionLimits_( bridgingFunctionLimits ),
         bridgingVariable_( bridgingVariable )
     { }
 
-    std::shared_ptr< AerodynamicCoefficientSettings > getModelSettings1( )
+    std::shared_ptr< AerodynamicCoefficientSettings > getCoefficientSettings1( )
     {
-        return modelSettings1_;
+        return coefficientSettings1_;
     }
 
-    std::shared_ptr< AerodynamicCoefficientSettings > getMomentModelSettings2( )
+    std::shared_ptr< AerodynamicCoefficientSettings > getCoefficientSettings2( )
     {
-        return modelSettings2_;
+        return coefficientSettings2_;
     }
 
     std::function< const double > getBridgingFunction( )
@@ -551,9 +551,16 @@ public:
 
 
 private:
+
     std::shared_ptr< AerodynamicCoefficientSettings > modelSettings1_;
+
     std::shared_ptr< AerodynamicCoefficientSettings > modelSettings2_;
 
+    std::function< const double > bridgingFunction_;
+
+    std::pair< double, double > bridgingFunctionLimits_;
+
+    aerodynamics::AerodynamicCoefficientsIndependentVariables bridgingVariable_;
 };
 
 

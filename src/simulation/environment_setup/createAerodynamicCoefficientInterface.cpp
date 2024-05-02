@@ -256,6 +256,56 @@ createUnivariateTabulatedCoefficientAerodynamicCoefficientInterface(
     }
 }
 
+
+std::shared_ptr< aerodynamics::AerodynamicCoefficientInterface >
+createBridgedAerodynamicCoefficientInterface(
+    const std::shared_ptr< AerodynamicCoefficientSettings > coefficientSettings,
+    const std::string& body,
+    const SystemOfBodies& bodies
+    )
+{
+
+    using namespace tudat::aerodynamics;
+
+    // Check consistency of type.
+    std::shared_ptr< BridgedAerodynamicCoefficientSettings > bridgedCoefficientSettings =
+            std::dynamic_pointer_cast< BridgedAerodynamicCoefficientSettings >(
+                coefficientSettings );
+    if( bridgedCoefficientSettings == nullptr )
+    {
+        throw std::runtime_error(
+                    "Error, expected bridged aerodynamic coefficients for body " + body );
+    }
+    else
+    {
+        // Create coefficient interface.
+
+        // First, create both coefficient interfaces
+
+        std::shared_ptr< aerodynamics::AerodynamicCoefficientInterface > coefficientInterface_1 =
+            createAerodynamicCoefficientInterface(
+                bridgedCoefficientSettings->getModelSettings1( ), body, bodies );
+
+        std::shared_ptr< aerodynamics::AerodynamicCoefficientInterface > coefficientInterface_2 =
+            createAerodynamicCoefficientInterface(
+                bridgedCoefficientSettings->getModelSettings2( ), body, bodies );
+
+        // Create bridged interface
+        // Create an empty coefficient interface to be used as a placeholder for the bridged interface
+
+        std::shared_ptr< aerodynamics::AerodynamicCoefficientInterface > bridgedInterface =
+            std::make_shared< aerodynamics::BridgingAerodynamicCoefficientInterface >(
+                coefficientInterface_1, coefficientInterface_2,
+                bridgedCoefficientSettings->getBridgingFunction( ) );
+
+
+    }
+
+
+}
+
+
+
 std::shared_ptr< aerodynamics::AerodynamicMomentContributionInterface > createMomentContributionInterface(
             const aerodynamics::AerodynamicCoefficientFrames forceCoefficientFrame,
             const aerodynamics::AerodynamicCoefficientFrames momentCoefficientFrame,
@@ -449,9 +499,8 @@ createAerodynamicCoefficientInterface(
         }
         break;
     }
-    
     case rarefied_flow_aerodynamic_coefficients:
-
+    {
         coefficientInterface = std::make_shared< RarefiedFlowAerodynamicCoefficientInterface >(
                     bodies.at( body )->getVehicleSystems( ), coefficientSettings->getReferenceLength( ),
                     coefficientSettings->getReferenceArea( ),
@@ -459,9 +508,9 @@ createAerodynamicCoefficientInterface(
                     coefficientSettings->getIndependentVariableNames( ),
                     coefficientSettings->getForceCoefficientsFrame( ),
                     coefficientSettings->getMomentCoefficientsFrame( ));
-
+    }
     case hypersonic_flow_aerodynamic_coefficients:
-
+    {
         coefficientInterface = std::make_shared< HypersonicFlowAerodynamicCoefficientInterface >(
                     bodies.at( body )->getVehicleSystems( ), coefficientSettings->getReferenceLength( ),
                     coefficientSettings->getReferenceArea( ),
@@ -469,12 +518,13 @@ createAerodynamicCoefficientInterface(
                     coefficientSettings->getIndependentVariableNames( ),
                     coefficientSettings->getForceCoefficientsFrame( ),
                     coefficientSettings->getMomentCoefficientsFrame( ) );
-
+    }
     case bridged_models_aerodynamic_coefficients:
+    {
 
-        throw std::runtime_error( "Error, bridged aerodynamic coefficient models not yet implemented" );
-
-    
+        coefficientInterface =  createBridgedAerodynamicCoefficientInterface(
+                    coefficientSettings, body, bodies );
+    }    
     default:
         throw std::runtime_error( "Error, do not recognize aerodynamic coefficient settings for " + body );
     }
