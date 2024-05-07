@@ -544,7 +544,7 @@ public:
         return bridgingFunctionLimits_;
     }
 
-    aerodynamics::AerodynamicCoefficientsIndependentVariables getBridgingVariable( )
+    aerodynamics::AerodynamicCoefficientsIndependentVariables getBridgingVariableNames( )
     {
         return bridgingVariable_;
     }

@@ -458,6 +458,13 @@ public:
         return currentNumberDensities_.at( species );
     }
 
+    double getCurrentKnudsenNumber( const double characteristicLength )
+    {
+        
+        double KnudsenNumber = 
+
+    }
+
 
     //! Function to return atmosphere model object
     /*!

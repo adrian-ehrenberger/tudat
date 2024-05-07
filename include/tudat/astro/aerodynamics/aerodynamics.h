@@ -59,8 +59,9 @@ enum AerodynamicCoefficientsIndependentVariables
     h_number_density_dependent = 12,
     n_number_density_dependent = 13,
     anomalous_o_number_density_dependent = 14,
-    control_surface_deflection_dependent = 15,
-    undefined_independent_variable = 16
+    knudesen_number_dependent = 15,
+    control_surface_deflection_dependent = 16,
+    undefined_independent_variable = 17
 };
  
 //! Function to combined the force and moment coefficients from separate function pointers.
