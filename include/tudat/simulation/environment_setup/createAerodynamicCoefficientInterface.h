@@ -439,131 +439,6 @@ private:
 
 };
 
-class RarefiedFlowAerodynamicCoefficientSettings: public AerodynamicCoefficientSettings
-{
-public:
-
-    RarefiedFlowAerodynamicCoefficientSettings(
-            const double referenceLength,
-            const double referenceArea,
-            const Eigen::Vector3d& momentReferencePoint,
-            const std::vector< aerodynamics::AerodynamicCoefficientsIndependentVariables >
-            independentVariableNames = {
-                angle_of_attack_dependent,
-                angle_of_sideslip_dependent,
-                temperature_dependent,
-                velocity_dependent,
-                he_number_density_dependent,
-                o_number_density_dependent,
-                n2_number_density_dependent,
-                o2_number_density_dependent,
-                ar_number_density_dependent,
-                h_number_density_dependent,
-                n_number_density_dependent,
-                anomalous_o_number_density_dependent},
-            const aerodynamics::AerodynamicCoefficientFrames forceCoefficientsFrame = aerodynamics::negative_aerodynamic_frame_coefficients,
-            const aerodynamics::AerodynamicCoefficientFrames momentCoefficientsFrame = aerodynamics::body_fixed_frame_coefficients,
-            const bool addForceContributionToMoments = false ) :
-        AerodynamicCoefficientSettings(
-            rarefied_flow_aerodynamic_coefficients, referenceLength, referenceArea,
-            momentReferencePoint,
-            independentVariableNames,
-            forceCoefficientsFrame, momentCoefficientsFrame,
-            addForceContributionToMoments )
-
-};
-
-
-class HypersonicFlowAerodynamicCoefficientSettings: public AerodynamicCoefficientSettings
-{
-public:
-
-    HypersonicFlowAerodynamicCoefficientSettings(
-            const double referenceLength,
-            const double referenceArea,
-            const Eigen::Vector3d& momentReferencePoint,
-            const std::vector< aerodynamics::AerodynamicCoefficientsIndependentVariables >
-            independentVariableNames = {
-                aerodynamics::angle_of_attack_dependent,
-                aerodynamics::angle_of_sideslip_dependent,
-                aerodynamics::mach_number_dependent},
-            const aerodynamics::AerodynamicCoefficientFrames forceCoefficientsFrame = aerodynamics::negative_aerodynamic_frame_coefficients,
-            const aerodynamics::AerodynamicCoefficientFrames momentCoefficientsFrame = aerodynamics::body_fixed_frame_coefficients,
-            const bool addForceContributionToMoments = false ) :
-        AerodynamicCoefficientSettings(
-            hypersonic_flow_aerodynamic_coefficients, referenceLength, referenceArea,
-            momentReferencePoint,
-            independentVariableNames,
-            forceCoefficientsFrame, momentCoefficientsFrame,
-            addForceContributionToMoments )
-
-};
-
-
-class BridgedModelsAerodynamicCoefficientSettings: public AerodynamicCoefficientSettings
-{
-public:
-
-    BridgedModelsAerodynamicCoefficientSettings(
-            const std::shared_ptr< AerodynamicCoefficientSettings > coefficientSettings1,
-            const std::shared_ptr< AerodynamicCoefficientSettings > coefficientSettings2,
-            const std::function< const double > bridgingFunction,
-            const std::pair< double, double > bridgingFunctionLimits,
-            const aerodynamics::AerodynamicCoefficientsIndependentVariables bridgingVariable = aerodynamics::knudsen_number_dependent) :
-        AerodynamicCoefficientSettings(
-            bridged_models_aerodynamic_coefficients, 
-            ModelSettings1->getReferenceLength( ), ModelSettings1->getReferenceArea( ),
-            ModelSettings1->getMomentReferencePoint( ),
-            ModelSettings1->getIndependentVariableNames( ),
-            ModelSettings1->getForceCoefficientsFrame( ), ModelSettings1->getMomentCoefficientsFrame( ),
-            ModelSettings1->getAddForceContributionToMoments( )),
-        coefficientSettings1_( coefficientSettings1 ),
-        coefficientSettings2_( coefficientSettings2 ),
-        bridgingFunction_( bridgingFunction ),
-        bridgingFunctionLimits_( bridgingFunctionLimits ),
-        bridgingVariable_( bridgingVariable )
-    { }
-
-    std::shared_ptr< AerodynamicCoefficientSettings > getCoefficientSettings1( )
-    {
-        return coefficientSettings1_;
-    }
-
-    std::shared_ptr< AerodynamicCoefficientSettings > getCoefficientSettings2( )
-    {
-        return coefficientSettings2_;
-    }
-
-    std::function< const double > getBridgingFunction( )
-    {
-        return bridgingFunction_;
-    }
-
-    std::pair< double, double > getBridgingFunctionLimits( )
-    {
-        return bridgingFunctionLimits_;
-    }
-
-    aerodynamics::AerodynamicCoefficientsIndependentVariables getBridgingVariableNames( )
-    {
-        return bridgingVariable_;
-    }
-
-
-private:
-
-    std::shared_ptr< AerodynamicCoefficientSettings > modelSettings1_;
-
-    std::shared_ptr< AerodynamicCoefficientSettings > modelSettings2_;
-
-    std::function< const double > bridgingFunction_;
-
-    std::pair< double, double > bridgingFunctionLimits_;
-
-    aerodynamics::AerodynamicCoefficientsIndependentVariables bridgingVariable_;
-};
-
-
 //! @get_docstring(constantAerodynamicCoefficientSettings)
 inline std::shared_ptr< AerodynamicCoefficientSettings > constantAerodynamicCoefficientSettingsDeprecated(
         const double referenceArea,
@@ -693,6 +568,132 @@ inline std::shared_ptr< AerodynamicCoefficientSettings > customAerodynamicCoeffi
             independentVariableNames,
             forceCoefficientsFrame, aerodynamics::undefined_frame_coefficients );
 }
+
+
+
+class RarefiedFlowAerodynamicCoefficientSettings: public AerodynamicCoefficientSettings
+{
+public:
+
+    RarefiedFlowAerodynamicCoefficientSettings(
+            const double referenceLength,
+            const double referenceArea,
+            const Eigen::Vector3d& momentReferencePoint,
+            const std::vector< aerodynamics::AerodynamicCoefficientsIndependentVariables >
+            independentVariableNames = {
+                angle_of_attack_dependent,
+                angle_of_sideslip_dependent,
+                temperature_dependent,
+                velocity_dependent,
+                he_number_density_dependent,
+                o_number_density_dependent,
+                n2_number_density_dependent,
+                o2_number_density_dependent,
+                ar_number_density_dependent,
+                h_number_density_dependent,
+                n_number_density_dependent,
+                anomalous_o_number_density_dependent},
+            const aerodynamics::AerodynamicCoefficientFrames forceCoefficientsFrame = aerodynamics::negative_aerodynamic_frame_coefficients,
+            const aerodynamics::AerodynamicCoefficientFrames momentCoefficientsFrame = aerodynamics::body_fixed_frame_coefficients,
+            const bool addForceContributionToMoments = false ) :
+        AerodynamicCoefficientSettings(
+            rarefied_flow_aerodynamic_coefficients, referenceLength, referenceArea,
+            momentReferencePoint,
+            independentVariableNames,
+            forceCoefficientsFrame, momentCoefficientsFrame,
+            addForceContributionToMoments )
+
+};
+
+class HypersonicFlowAerodynamicCoefficientSettings: public AerodynamicCoefficientSettings
+{
+public:
+
+    HypersonicFlowAerodynamicCoefficientSettings(
+            const double referenceLength,
+            const double referenceArea,
+            const Eigen::Vector3d& momentReferencePoint,
+            const std::vector< aerodynamics::AerodynamicCoefficientsIndependentVariables >
+            independentVariableNames = {
+                aerodynamics::angle_of_attack_dependent,
+                aerodynamics::angle_of_sideslip_dependent,
+                aerodynamics::mach_number_dependent},
+            const aerodynamics::AerodynamicCoefficientFrames forceCoefficientsFrame = aerodynamics::negative_aerodynamic_frame_coefficients,
+            const aerodynamics::AerodynamicCoefficientFrames momentCoefficientsFrame = aerodynamics::body_fixed_frame_coefficients,
+            const bool addForceContributionToMoments = false ) :
+        AerodynamicCoefficientSettings(
+            hypersonic_flow_aerodynamic_coefficients, referenceLength, referenceArea,
+            momentReferencePoint,
+            independentVariableNames,
+            forceCoefficientsFrame, momentCoefficientsFrame,
+            addForceContributionToMoments )
+
+};
+
+
+class BridgedModelsAerodynamicCoefficientSettings: public AerodynamicCoefficientSettings
+{
+public:
+
+    BridgedModelsAerodynamicCoefficientSettings(
+            const std::shared_ptr< AerodynamicCoefficientSettings > coefficientSettings1,
+            const std::shared_ptr< AerodynamicCoefficientSettings > coefficientSettings2,
+            const std::function< const double > bridgingFunction,
+            const std::pair< double, double > bridgingFunctionLimits,
+            const aerodynamics::AerodynamicCoefficientsIndependentVariables bridgingVariable = aerodynamics::AerodynamicCoefficientsIndependentVariables::knudsen_number_dependent) :
+        AerodynamicCoefficientSettings(
+            bridged_models_aerodynamic_coefficients, 
+            ModelSettings1->getReferenceLength( ), ModelSettings1->getReferenceArea( ),
+            ModelSettings1->getMomentReferencePoint( ),
+            ModelSettings1->getIndependentVariableNames( ),
+            ModelSettings1->getForceCoefficientsFrame( ), ModelSettings1->getMomentCoefficientsFrame( ),
+            ModelSettings1->getAddForceContributionToMoments( )),
+        coefficientSettings1_( coefficientSettings1 ),
+        coefficientSettings2_( coefficientSettings2 ),
+        bridgingFunction_( bridgingFunction ),
+        bridgingFunctionLimits_( bridgingFunctionLimits ),
+        bridgingVariable_( bridgingVariable )
+    { }
+
+    std::shared_ptr< AerodynamicCoefficientSettings > getCoefficientSettings1( )
+    {
+        return coefficientSettings1_;
+    }
+
+    std::shared_ptr< AerodynamicCoefficientSettings > getCoefficientSettings2( )
+    {
+        return coefficientSettings2_;
+    }
+
+    std::function< const double > getBridgingFunction( )
+    {
+        return bridgingFunction_;
+    }
+
+    std::pair< double, double > getBridgingFunctionLimits( )
+    {
+        return bridgingFunctionLimits_;
+    }
+
+    aerodynamics::AerodynamicCoefficientsIndependentVariables getBridgingVariableNames( )
+    {
+        return bridgingVariable_;
+    }
+
+
+private:
+
+    std::shared_ptr< AerodynamicCoefficientSettings > modelSettings1_;
+
+    std::shared_ptr< AerodynamicCoefficientSettings > modelSettings2_;
+
+    std::function< const double > bridgingFunction_;
+
+    std::pair< double, double > bridgingFunctionLimits_;
+
+    aerodynamics::AerodynamicCoefficientsIndependentVariables bridgingVariable_;
+};
+
 
 //  Base class (non-functional) for the different classes of TabulatedAerodynamicCoefficientSettings.
 /*  

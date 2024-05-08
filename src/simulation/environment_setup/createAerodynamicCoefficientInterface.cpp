@@ -327,7 +327,6 @@ createBridgedAerodynamicCoefficientInterface(
                 "Error, expected the same moment coefficients frame for both models for bridged aerodynamic coefficients for body " + body );
         }
 
-
         int numberOfBridgingVars = bridgedCoefficientSettings->getBridgingVariableNames( ).size( );
         if ( numberOfBridgingVars != 1 )
         {

@@ -458,10 +458,21 @@ public:
         return currentNumberDensities_.at( species );
     }
 
-    double getCurrentKnudsenNumber( const double characteristicLength )
+    double getCurrentKnudsenNumber( )
     {
         
-        double KnudsenNumber = 
+        // get reference length from aerodynamic coefficient interface
+        double referenceLength = aerodynamicCoefficientInterface_->getReferenceLength( );
+
+        // get mean free path
+        updateAtmosphereInput( );
+        double meanFreePath = atmosphereModel_->getMeanFreePath(
+            scalarFlightConditions_.at( altitude_flight_condition ),
+            scalarFlightConditions_.at( longitude_flight_condition ),
+            scalarFlightConditions_.at( latitude_flight_condition ), 
+            currentTime_ );
+    
+        return meanFreePath / referenceLength;
 
     }
 
