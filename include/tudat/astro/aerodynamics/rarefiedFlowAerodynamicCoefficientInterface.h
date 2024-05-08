@@ -27,7 +27,6 @@
 
 #include "tudat/astro/aerodynamics/aerodynamicCoefficientInterface.h"
 #include "tudat/basics/basicTypedefs.h"
-// #include "tudat/astro/system_models/vehicleExteriorPanels.h"
 #include "tudat/astro/system_models/vehicleSystems.h"
 #include "tudat/astro/aerodynamics/rarefiedFlowInteractionModel.h"
 
@@ -36,11 +35,11 @@ namespace tudat
 namespace aerodynamics
 {
 
-// template< unsigned int NumberOfIndependentVariables >
-// class RarefiedFlowAerodynamicCoefficientInterface: public AerodynamicCoefficientInterface
 class RarefiedFlowAerodynamicCoefficientInterface: public AerodynamicCoefficientInterface
 {
 public:
+
+    //! Constructor.
     /*!
      * Constructor of rarefied flow aerodynamic coefficient interface.
      * \param vehicleExteriorPanels Vehicle panels
@@ -55,11 +54,11 @@ public:
      * \param dataPointsOfInclinationsForShading Data points of inclinations for shading
      */
     RarefiedFlowAerodynamicCoefficientInterface(
-        tudat::system_models::VehicleSystems vehicle,
+        std::shared_ptr<tudat::system_models::VehicleSystems> vehicle,
         const double referenceLength,
         const double referenceArea,
         const Eigen::Vector3d& momentReferencePoint,
-        const std::vector< AerodynamicCoefficientsIndependentVariables > independentVariableNames = {
+        const std::vector< AerodynamicCoefficientsIndependentVariables >& independentVariableNames = {
             angle_of_attack_dependent,
             angle_of_sideslip_dependent,
             temperature_dependent,
@@ -76,12 +75,11 @@ public:
         const AerodynamicCoefficientFrames momentCoefficientsFrame = body_fixed_frame_coefficients,
         const bool accountForShadedPanels = false
         // const std::map< int, std::vector< double > > dataPointsOfInclinationsForShading = std::map< int, std::vector< double > >( ) 
-        ): 
+        ) : 
         AerodynamicCoefficientInterface(
-            referenceLength, referenceLength, momentReferencePoint, independentVariableNames, forceCoefficientsFrame, momentCoefficientsFrame), 
+            referenceLength, referenceLength, momentReferencePoint, independentVariableNames, forceCoefficientsFrame, momentCoefficientsFrame
+            ), 
         vehicle_( vehicle ),
-        vehicleExteriorPanels_( vehicle.getVehicleExteriorPanels() ), 
-        // vehiclePartOrientations_( vehicle.getVehiclePartOrientations() ), 
         referenceLength_( referenceLength ), referenceArea_( referenceArea ),
         momentReferencePoint_( momentReferencePoint ), 
         independentVariableNames_( independentVariableNames ), 
@@ -89,21 +87,22 @@ public:
         momentCoefficientsFrame_( momentCoefficientsFrame ), accountForShadedPanels_( accountForShadedPanels )
         // dataPointsOfInclinationsForShading_( dataPointsOfInclinationsForShading)
         {
-            
             // initializing total aerodynamic coefficient vector with nans
             totalAerodynamicCoefficients_ = Eigen::Vector6d::Constant( TUDAT_NAN );
 
+            vehicleExteriorPanels_ = vehicle_->getVehicleExteriorPanels();
+            // vehiclePartOrientations_ = vehicle_->getVehiclePartOrientations();
         }
 
     //! Default destructor.
     /*!
      * Default destructor.
      */
-    ~RarefiedFlowAerodynamicCoefficientInterface( ) = default;
+    virtual ~RarefiedFlowAerodynamicCoefficientInterface( ) { }
 
 
 
-    void updateCurrentCoefficients(
+    virtual void updateCurrentCoefficients(
         const std::vector< double >& independentVariables,
         const double currentTime);
     
@@ -131,6 +130,9 @@ private:
 
     
     // Declaration of member variables
+
+    //! Vehicle
+    std::shared_ptr<tudat::system_models::VehicleSystems> vehicle_;
 
     //! Vehicle panels
     std::map< std::string, std::vector< std::shared_ptr< tudat::system_models::VehicleExteriorPanel > > > vehicleExteriorPanels_;
@@ -177,8 +179,6 @@ private:
     //! Data points of inclinations for shading
     std::map< int, std::vector< double > > dataPointsOfInclinationsForShading_;
 
-    //! Vehicle
-    tudat::system_models::VehicleSystems vehicle_;
 
 };
 

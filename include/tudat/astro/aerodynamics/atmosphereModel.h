@@ -155,6 +155,13 @@ public:
         return false;
     }
 
+    virtual double getMeanFreePath( const double altitude, const double longitude,
+                                    const double latitude, const double time )
+    {
+
+        throw std::runtime_error( "Error, atmospehere model has no function to calculate mean free path" );
+    }
+
     //! Function to retrieve the model describing the wind velocity vector of the atmosphere
     /*!
      * Function to retrieve the model describing the wind velocity vector of the atmosphere

@@ -19,6 +19,8 @@
 #include <string>
 #include <vector>
 
+#include <boost/lambda/lambda.hpp>
+#include <functional>
 #include <boost/array.hpp>
 #include <boost/multi_array.hpp>
 #include <memory>
@@ -27,7 +29,6 @@
 
 #include "tudat/astro/aerodynamics/aerodynamicCoefficientInterface.h"
 #include "tudat/basics/basicTypedefs.h"
-// #include "tudat/astro/system_models/vehicleExteriorPanels.h"
 #include "tudat/astro/system_models/vehicleSystems.h"
 #include "tudat/astro/aerodynamics/hypersonicFlowInteractionModel.h"
 
@@ -36,8 +37,6 @@ namespace tudat
 namespace aerodynamics
 {
 
-// template< unsigned int NumberOfIndependentVariables >
-// class RarefiedFlowAerodynamicCoefficientInterface: public AerodynamicCoefficientInterface
 class HypersonicFlowAerodynamicCoefficientInterface: public AerodynamicCoefficientInterface
 {
 public:
@@ -54,11 +53,11 @@ public:
      * \param dataPointsOfInclinationsForShading Data points of inclinations for shading
      */
     HypersonicFlowAerodynamicCoefficientInterface(
-        tudat::system_models::VehicleSystems vehicle,
+        std::shared_ptr<tudat::system_models::VehicleSystems> vehicle,
         const double referenceLength,
         const double referenceArea,
         const Eigen::Vector3d& momentReferencePoint,
-        const std::vector< AerodynamicCoefficientsIndependentVariables > independentVariableNames = {
+        const std::vector< AerodynamicCoefficientsIndependentVariables >& independentVariableNames = {
             angle_of_attack_dependent,
             angle_of_sideslip_dependent},
         const AerodynamicCoefficientFrames forceCoefficientsFrame = negative_aerodynamic_frame_coefficients,
@@ -69,18 +68,20 @@ public:
         AerodynamicCoefficientInterface(
             referenceLength, referenceLength, momentReferencePoint, independentVariableNames, forceCoefficientsFrame, momentCoefficientsFrame), 
         vehicle_( vehicle ),
-        vehicleExteriorPanels_( vehicle.getVehicleExteriorPanels() ), 
-        // vehiclePartOrientations_( vehicle.getVehiclePartOrientations() ), 
         referenceLength_( referenceLength ), referenceArea_( referenceArea ),
         momentReferencePoint_( momentReferencePoint ), 
         independentVariableNames_( independentVariableNames ), 
         forceCoefficientsFrame_( forceCoefficientsFrame ),
         momentCoefficientsFrame_( momentCoefficientsFrame ), accountForShadedPanels_( accountForShadedPanels )
-        // dataPointsOfInclinationsForShading_( dataPointsOfInclinationsForShading)
+        // dataPointsOfInclinationsForShading_( dataPointsOfInclinationsForShading),
+        //  )
         {
             
             // initializing total aerodynamic coefficient vector with nans
             totalAerodynamicCoefficients_ = Eigen::Vector6d::Constant( TUDAT_NAN );
+
+            vehicleExteriorPanels_ = vehicle_->getVehicleExteriorPanels();
+            // vehiclePartOrientations_ = vehicle_->getVehiclePartOrientations();
 
         }
 
@@ -88,13 +89,12 @@ public:
     /*!
      * Default destructor.
      */
-    ~HypersonicFlowAerodynamicCoefficientInterface( ) = default;
-
+    virtual ~HypersonicFlowAerodynamicCoefficientInterface( ) { }
 
 
     void updateCurrentCoefficients(
         const std::vector< double >& independentVariables,
-        const double currentTime);
+        const double currentTime) {}
     
 
     Eigen::Vector6d getCurrentAerodynamicCoefficients( );
@@ -118,6 +118,9 @@ private:
 
     
     // Declaration of member variables
+
+    //! Vehicle
+    std::shared_ptr<tudat::system_models::VehicleSystems> vehicle_;
 
     //! Vehicle panels
     std::map< std::string, std::vector< std::shared_ptr< tudat::system_models::VehicleExteriorPanel > > > vehicleExteriorPanels_;
@@ -165,8 +168,6 @@ private:
     //! Data points of inclinations for shading
     std::map< int, std::vector< double > > dataPointsOfInclinationsForShading_;
 
-    //! Vehicle
-    tudat::system_models::VehicleSystems vehicle_;
 
 };
 

@@ -11,9 +11,6 @@
 
 #include <memory>
 
-
-
-
 #include "tudat/astro/aerodynamics/aerodynamics.h"
 #include "tudat/astro/aerodynamics/flightConditions.h"
 #include "tudat/astro/aerodynamics/standardAtmosphere.h"
@@ -240,7 +237,7 @@ double AtmosphericFlightConditions::getAerodynamicCoefficientIndependentVariable
         break;
 
     // non-dimenstional numbers
-    case knudesen_number_dependent:
+    case knudsen_number_dependent:
         currentIndependentVariable = getCurrentKnudsenNumber( );
         break;
 
