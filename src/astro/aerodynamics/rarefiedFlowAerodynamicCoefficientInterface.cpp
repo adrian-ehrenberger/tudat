@@ -33,24 +33,6 @@ namespace aerodynamics
 {
 
 
-// RarefiedFlowAerodynamicCoefficientInterface::RarefiedFlowAerodynamicCoefficientInterface(
-//     const std::map< std::string, std::vector< std::shared_ptr< tudat::system_models::VehicleExteriorPanel > > > vehicleExteriorPanels,
-//     const std::map< std::string, std::shared_ptr< tudat::ephemerides::RotationalEphemeris > > vehiclePartOrientation,
-//     const double referenceLength,
-//     const double referenceArea,
-//     const Eigen::Vector3d& momentReferencePoint,
-//     const std::vector< AerodynamicCoefficientsIndependentVariables > independentVariableNames,
-//     const AerodynamicCoefficientFrames forceCoefficientsFrame = negative_aerodynamic_frame_coefficients,
-//     const AerodynamicCoefficientFrames momentCoefficientsFrame = body_fixed_frame_coefficients,
-//     const bool accountForShadedPanels = false,
-//     const std::map< int, std::vector< double > > dataPointsOfInclinationsForShading = std::map< int, std::vector< double > >( )
-//     ){
-
-
-//     }
-
-
-
 
 //! Compute the aerodynamic coefficients of the body itself (without control surfaces) at current flight condition.
 /*!

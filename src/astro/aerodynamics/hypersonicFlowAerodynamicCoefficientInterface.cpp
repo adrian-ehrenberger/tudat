@@ -34,27 +34,6 @@ namespace aerodynamics
 {
 
 
-// HypersonicFlowAerodynamicCoefficientInterface::HypersonicFlowAerodynamicCoefficientInterface(
-//     tudat::system_models::VehicleSystems vehicle,
-//     const double referenceLength,
-//     const double referenceArea,
-//     const Eigen::Vector3d& momentReferencePoint,
-//     const std::vector< AerodynamicCoefficientsIndependentVariables > independentVariableNames = {
-//         angle_of_attack_dependent,
-//         angle_of_sideslip_dependent},
-//     const AerodynamicCoefficientFrames forceCoefficientsFrame = negative_aerodynamic_frame_coefficients,
-//     const AerodynamicCoefficientFrames momentCoefficientsFrame = body_fixed_frame_coefficients,
-//     const bool accountForShadedPanels = false
-//     ){
-
-//         // pregenerate coefficients for vehicle if requested
-
-//         if ( pregenerateCoefficients )
-//         {
-//             createCoefficientsMap( );
-//         }
-
-//     }
 
 
 //! Compute the aerodynamic coefficients of the body itself (without control surfaces) at current flight condition.

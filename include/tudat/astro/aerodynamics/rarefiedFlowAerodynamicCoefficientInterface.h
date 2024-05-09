@@ -101,8 +101,7 @@ public:
     virtual ~RarefiedFlowAerodynamicCoefficientInterface( ) { }
 
 
-
-    virtual void updateCurrentCoefficients(
+    void updateCurrentCoefficients(
         const std::vector< double >& independentVariables,
         const double currentTime);
     
