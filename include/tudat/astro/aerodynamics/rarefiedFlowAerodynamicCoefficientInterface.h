@@ -42,8 +42,7 @@ public:
     //! Constructor.
     /*!
      * Constructor of rarefied flow aerodynamic coefficient interface.
-     * \param vehicleExteriorPanels Vehicle panels
-     * \param vehiclePartOrientation Vehicle part orientation
+     * \param vehicle Vehicle 
      * \param referenceLength Reference length
      * \param referenceArea Reference area
      * \param momentReferencePoint Moment reference point
@@ -75,7 +74,7 @@ public:
         const AerodynamicCoefficientFrames momentCoefficientsFrame = body_fixed_frame_coefficients,
         const bool accountForShadedPanels = false
         // const std::map< int, std::vector< double > > dataPointsOfInclinationsForShading = std::map< int, std::vector< double > >( ) 
-        ) : 
+    ): 
         AerodynamicCoefficientInterface(
             referenceLength, referenceLength, momentReferencePoint, independentVariableNames, forceCoefficientsFrame, momentCoefficientsFrame
             ), 

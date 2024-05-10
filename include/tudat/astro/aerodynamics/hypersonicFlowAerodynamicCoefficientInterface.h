@@ -8,8 +8,6 @@
  *    http://tudat.tudelft.nl/LICENSE.
  *
  *    References
- *      Doornbos, E. N. Thermospheric Density and Wind Determination from Satellite Dynamics, 2011. 
- *      (Page 66+)
  */
 
 #ifndef TUDAT_HYPERSONICFLOW_AERODYNAMIC_COEFFICIENT_INTERFACE_H

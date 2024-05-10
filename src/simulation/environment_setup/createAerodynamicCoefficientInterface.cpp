@@ -282,11 +282,11 @@ createBridgedAerodynamicCoefficientInterface(
         // Create coefficient interface.
         // First, create both coefficient interfaces to be bridged
 
-        std::shared_ptr< aerodynamics::AerodynamicCoefficientInterface > coefficientInterface_1 =
+        std::shared_ptr< AerodynamicCoefficientInterface > coefficientInterface_1 =
             createAerodynamicCoefficientInterface(
                 bridgedCoefficientSettings->getCoefficientSettings1( ), body, bodies );
 
-        std::shared_ptr< aerodynamics::AerodynamicCoefficientInterface > coefficientInterface_2 =
+        std::shared_ptr< AerodynamicCoefficientInterface > coefficientInterface_2 =
             createAerodynamicCoefficientInterface(
                 bridgedCoefficientSettings->getCoefficientSettings2( ), body, bodies );
 
@@ -389,11 +389,11 @@ createBridgedAerodynamicCoefficientInterface(
             };
 
 
-        std::vector< aerodynamics::AerodynamicCoefficientsIndependentVariables > vec1 = bridgedCoefficientSettings->getBridgingVariableNames( );
-        std::vector< aerodynamics::AerodynamicCoefficientsIndependentVariables > vec2 = coefficientInterface_1->getIndependentVariableNames( );
-        std::vector< aerodynamics::AerodynamicCoefficientsIndependentVariables > vec3 = coefficientInterface_2->getIndependentVariableNames( );
+        std::vector< AerodynamicCoefficientsIndependentVariables > vec1 = bridgedCoefficientSettings->getBridgingVariableNames( );
+        std::vector< AerodynamicCoefficientsIndependentVariables > vec2 = coefficientInterface_1->getIndependentVariableNames( );
+        std::vector< AerodynamicCoefficientsIndependentVariables > vec3 = coefficientInterface_2->getIndependentVariableNames( );
 
-        std::vector< aerodynamics::AerodynamicCoefficientsIndependentVariables > allIndependentVariableNames;
+        std::vector< AerodynamicCoefficientsIndependentVariables > allIndependentVariableNames;
         // Combine vec1 into allIndependentVariableNames
         allIndependentVariableNames.insert(allIndependentVariableNames.end(), vec1.begin(), vec1.end());
 
@@ -405,7 +405,7 @@ createBridgedAerodynamicCoefficientInterface(
         
 
         // Create aerodynamic coefficient interface.
-        return  std::make_shared< aerodynamics::CustomAerodynamicCoefficientInterface >(
+        return  std::make_shared< CustomAerodynamicCoefficientInterface >(
                 forceCoefficientFunction, 
                 momentCoefficientFunction,
                 coefficientInterface_1->getReferenceLength( ),
@@ -610,17 +610,17 @@ createAerodynamicCoefficientInterface(
         }
         break;
     }
-    case rarefied_flow_aerodynamic_coefficients:
-    {
-        coefficientInterface = std::make_shared< RarefiedFlowAerodynamicCoefficientInterface >(
-                    bodies.at( body )->getVehicleSystems( ), coefficientSettings->getReferenceLength( ),
-                    coefficientSettings->getReferenceArea( ),
-                    coefficientSettings->getMomentReferencePoint( ),
-                    coefficientSettings->getIndependentVariableNames( ),
-                    coefficientSettings->getForceCoefficientsFrame( ),
-                    coefficientSettings->getMomentCoefficientsFrame( ));
-        break;
-    }
+    // case rarefied_flow_aerodynamic_coefficients:
+    // {
+    //     coefficientInterface = std::make_shared< RarefiedFlowAerodynamicCoefficientInterface >(
+    //                 bodies.at( body )->getVehicleSystems( ), coefficientSettings->getReferenceLength( ),
+    //                 coefficientSettings->getReferenceArea( ),
+    //                 coefficientSettings->getMomentReferencePoint( ),
+    //                 coefficientSettings->getIndependentVariableNames( ),
+    //                 coefficientSettings->getForceCoefficientsFrame( ),
+    //                 coefficientSettings->getMomentCoefficientsFrame( ));
+    //     break;
+    // }
     case hypersonic_flow_aerodynamic_coefficients:
     {
         coefficientInterface = std::make_shared< HypersonicFlowAerodynamicCoefficientInterface >(
@@ -635,7 +635,7 @@ createAerodynamicCoefficientInterface(
     case bridged_models_aerodynamic_coefficients:
     {
 
-        coefficientInterface =  createBridgedAerodynamicCoefficientInterface(
+        coefficientInterface = createBridgedAerodynamicCoefficientInterface(
                     coefficientSettings, body, bodies );
         break;
     }    

@@ -24,6 +24,7 @@
 #include "tudat/astro/aerodynamics/aerodynamicCoefficientInterface.h"
 #include "tudat/basics/basicTypedefs.h"
 #include "tudat/astro/system_models/vehicleExteriorPanels.h"
+#include "tudat/astro/system_models/vehicleSystems.h"
 #include "tudat/astro/aerodynamics/rarefiedFlowInteractionModel.h"
 #include "tudat/astro/aerodynamics/rarefiedFlowAerodynamicCoefficientInterface.h"
 
