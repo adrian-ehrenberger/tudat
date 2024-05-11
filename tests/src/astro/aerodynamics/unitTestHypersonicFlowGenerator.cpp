@@ -74,7 +74,7 @@
 //         Eigen::Vector3d position_vector(mesh_panel_position_vectors[i_panel * 3], mesh_panel_position_vectors[i_panel * 3 + 1], mesh_panel_position_vectors[i_panel * 3 + 2]);
 
 //         // Create a shared pointer using std::make_shared
-//         auto panel = std::make_shared<tudat::system_models::VehicleExteriorPanel>(
+//         std::shared_ptr< tudat::system_models::VehicleExteriorPanel > panel = std::make_shared<tudat::system_models::VehicleExteriorPanel>(
 //             normal_vector,
 //             position_vector,
 //             mesh_panel_surface_areas[i_panel]  // Assuming each panel corresponds to three values in the vectors
@@ -100,11 +100,16 @@
 
 //     tudat::system_models::VehicleSystems vehicle = tudat::system_models::VehicleSystems( );
 
+//     // create a shared pointer to the vehicle
+
+
 //     vehicle.setVehicleExteriorPanels(vehicleExteriorPanels);
+
+//     std::shared_ptr<tudat::system_models::VehicleSystems> vehicle_ptr = std::make_shared<tudat::system_models::VehicleSystems>(vehicle);
 
 
 //     tudat::aerodynamics::HypersonicFlowAerodynamicCoefficientInterface coeff_interface(
-//         vehicle,
+//         vehicle_ptr,
 //         1.0, 1.0, Eigen::Vector3d(0.0, 0.0, 0.0)
 //     );
 

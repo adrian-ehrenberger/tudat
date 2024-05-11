@@ -631,7 +631,7 @@ public:
 
 };
 
-inline std::shared_ptr< HypersonicFlowAerodynamicCoefficientSettings > hypersonicFlowAerodynamicCoefficientSettings(
+inline std::shared_ptr< AerodynamicCoefficientSettings > hypersonicFlowAerodynamicCoefficientSettings(
             const double referenceLength,
             const double referenceArea,
             const Eigen::Vector3d& momentReferencePoint,
@@ -718,7 +718,7 @@ private:
     std::vector< aerodynamics::AerodynamicCoefficientsIndependentVariables > bridgingVariable_;
 };
 
-inline std::shared_ptr< BridgedModelsAerodynamicCoefficientSettings > bridgedModelsAerodynamicCoefficientSettings(
+inline std::shared_ptr< AerodynamicCoefficientSettings > bridgedModelsAerodynamicCoefficientSettings(
             const std::shared_ptr< AerodynamicCoefficientSettings > coefficientSettings1,
             const std::shared_ptr< AerodynamicCoefficientSettings > coefficientSettings2,
             const std::function< double( const double ) > bridgingFunction,

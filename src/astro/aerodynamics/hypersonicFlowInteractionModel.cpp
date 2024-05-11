@@ -43,6 +43,8 @@ double HypersonicFlowInteractionModel::computePanelPressureCoefficient(
 
     double panelPressureCoefficient = 0.0;
 
+    std::cout << inclinationAngle << std::endl;
+
     // if your're reading this, I apologize for the shit code. Just trying to get it to work atm....
     if (inclinationAngle <= -3.14159265359/2 || inclinationAngle >= 3.14159265359/2)
     {

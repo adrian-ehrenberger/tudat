@@ -90,9 +90,9 @@ public:
     virtual ~HypersonicFlowAerodynamicCoefficientInterface( ) { }
 
 
-    void updateCurrentCoefficients(
+    virtual void updateCurrentCoefficients(
         const std::vector< double >& independentVariables,
-        const double currentTime) {}
+        const double currentTime);
     
 
     Eigen::Vector6d getCurrentAerodynamicCoefficients( );
